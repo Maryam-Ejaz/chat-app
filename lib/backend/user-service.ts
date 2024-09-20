@@ -1,4 +1,5 @@
 import { supabaseClient } from "@/lib/backend/client";
+import { randomUUID } from "crypto";
 
 export const createOrUpdateUser = async (userId: string, name: string, avatarUrl: string) => {
   const supabase = supabaseClient();
@@ -19,7 +20,7 @@ export const createOrUpdateUser = async (userId: string, name: string, avatarUrl
   }
 
   const { data, error: dbError } = await supabase.from("users").insert({
-    id: userId,
+    id:randomUUID(),
     display_name: name,
     avatar_url: avatarUrl,
     email: "anonymous@example.com", 
