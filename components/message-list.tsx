@@ -21,17 +21,6 @@ const MessagesList = () => {
   } = useMessage((state) => state);
   const supabase = supabaseClient();
 
-  const formatDate = (date:any) => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-    const day = date.getDate();
-    const month = date.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
-    const year = date.getFullYear();
-  
-    return `${weekday}, ${day} ${month} ${year}`;
-  };
-  
-  
   useEffect(() => {
     const channel = supabase
       .channel("chatroom")
@@ -81,8 +70,9 @@ const MessagesList = () => {
       .subscribe();
 
     return () => {
-      channel.unsubscribe();
+      // channel.unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   useEffect(() => {
@@ -90,6 +80,7 @@ const MessagesList = () => {
     if (scrollContainer && !userScrolled) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   const handleOnScroll = () => {
@@ -114,17 +105,8 @@ const MessagesList = () => {
 
   return (
     <>
-      <div className="flex flex-col h-10 justify-center items-end bg-transparent relative">
-  <div className="absolute top-2 right-2">
-    {/* Today's Date */}
-    <div className="text-xs tracking-wide word-spacing bg-transparent">
-      {formatDate(new Date())}
-    </div>
-  </div>
-</div>
-
       <div
-        className="flex flex-col p-5 h-full overflow-y-auto"
+        className="flex-1 flex flex-col p-5 h-full overflow-y-auto"
         ref={scrollRef}
         onScroll={handleOnScroll}
       >
