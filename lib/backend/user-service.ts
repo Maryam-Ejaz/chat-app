@@ -20,7 +20,6 @@ export const createOrUpdateUser = async (userId: string, name: string, avatarUrl
   }
 
   const { data, error: dbError } = await supabase.from("users").insert({
-    id:randomUUID(),
     display_name: name,
     avatar_url: avatarUrl,
     email: "anonymous@example.com", 
