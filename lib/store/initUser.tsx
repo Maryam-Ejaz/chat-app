@@ -2,7 +2,7 @@
 import { User } from "@supabase/supabase-js";
 import React, { useEffect, useRef } from "react";
 import { useUser } from "./user";
-import { supabaseClient } from "@/lib/backend/client";  
+import { supabaseClient } from "@/lib/backend/client";
 
 export default function InitUser({ user }: { user: User | undefined }) {
   const initState = useRef(false);
@@ -33,7 +33,7 @@ export default function InitUser({ user }: { user: User | undefined }) {
         useUser.setState({
           user: {
             ...user,
-            ...userMetaData.user_metadata, // Spread the user_metadata
+            ...userMetaData.user_metadata,
           },
         });
       }
@@ -41,7 +41,7 @@ export default function InitUser({ user }: { user: User | undefined }) {
 
     if (!initState.current) {
       fetchUserData();  // Fetch user data on initial render
-      initState.current = true; // Set initState to true after fetching
+      initState.current = true;
     }
     // eslint-disable-next-line
   }, [user]);

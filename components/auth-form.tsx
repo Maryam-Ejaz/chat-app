@@ -1,13 +1,8 @@
 "use client"
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { OAuthButton } from "@/components/ui/oauth-button";
 import { AnonymousLoginForm } from "@/components/anonymous-login-form";
 
 const AuthForm = () => {
-  const [loggingWithGoogle, setLoggingWithGoogle] = useState(false);
-  const [loggingWithGithub, setLoggingWithGithub] = useState(false);
-  const [loggingWithDiscord, setLoggingWithDiscord] = useState(false);
   const [loggingAnonymously, setLoggingAnonymously] = useState(false);
 
   return (
@@ -19,21 +14,6 @@ const AuthForm = () => {
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex flex-col gap-6">
-          {/* <OAuthButton
-            provider="google"
-            logging={loggingWithGoogle}
-            setLogging={setLoggingWithGoogle}
-          />
-          <OAuthButton
-            provider="github"
-            logging={loggingWithGithub}
-            setLogging={setLoggingWithGithub}
-          /> */}
-          <OAuthButton
-            provider="discord"
-            logging={loggingWithDiscord}
-            setLogging={setLoggingWithDiscord}
-          />
           <AnonymousLoginForm
             logging={loggingAnonymously}
             setLogging={setLoggingAnonymously}

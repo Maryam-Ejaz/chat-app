@@ -25,8 +25,8 @@ const ChatHeader = ({ user }: { user: User | undefined }) => {
           <Image
             src="/echo-logo.png"
             alt="Echo Logo"
-            width={40} // Adjust width as needed
-            height={40} // Adjust height as needed
+            width={40}
+            height={40} 
             className="rounded-lg shadow-md"
           />
           <div className="flex flex-col ml-4">

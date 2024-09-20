@@ -8,7 +8,10 @@ import { useUser } from "@/lib/store/user";
 import { Imessage, useMessage } from "@/lib/store/messages";
 import { Textarea } from "@/components/ui/textarea";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { SmileIcon } from "lucide-react";
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -17,8 +20,10 @@ const ChatInput = () => {
   const supabase = supabaseClient();
 
   const [text, setText] = useState<string>("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const handleSendMessage = async (text: string) => {
+    const user = useUser.getState().user;
     if (text.trim()) {
       const id = uuidv4();
       const newMessage = {
@@ -46,13 +51,19 @@ const ChatInput = () => {
     }
   };
 
+  // Handle emoji selection
+  const handleEmojiSelect = (emoji: any) => {
+    setText(text + emoji.native);
+    setShowEmojiPicker(false); // Hide emoji picker after selection
+  };
+
   return (
-    <div className="px-9 pb-5 ">
+    <div className="px-9 pb-5">
       <div className="w-full">
-        <div className="flex">
-          <div className="flex-1">
+        <div className="relative flex items-center">
+          <div className="flex-1 relative px-1">
             <Textarea
-              className={`resize-none w-full border-b-2 ${text.trim() ? 'border-white' : 'border-gray-600'} focus:border-white`}
+              className={`resize-none w-full border-b-2 border-[var(--foreground-color)]`}
               placeholder="Send Message"
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -63,10 +74,22 @@ const ChatInput = () => {
                 }
               }}
             />
-          </div>
-          <div className="ml-2 mt-2 flex items-center">
+            {/* Icon Picker */}
             <button
-              className={`text-white ${!text.trim() ? "opacity-50 cursor-not-allowed" : ""}`}
+              className="absolute right-2 bottom-1 text-gray-500 hover:text-[var(--foreground-color)]"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <SmileIcon className="h-5 w-5 mb-1" />
+            </button>
+            {showEmojiPicker && (
+              <div className="absolute bottom-16 left-2 z-10">
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+              </div>
+            )}
+          </div>
+          <div className="ml-4 mt-2 flex items-center">
+            <button
+              className={`text-[var(--foreground-color)] ${!text.trim() ? " cursor-not-allowed" : ""}`}
               onClick={() => {
                 if (text.trim()) {
                   handleSendMessage(text);

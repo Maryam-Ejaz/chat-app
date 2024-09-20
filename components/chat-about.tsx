@@ -1,6 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
-
 const ChatAbout = () => {
   return (
     <div className="flex-1 flex items-center justify-center">
@@ -12,16 +9,6 @@ const ChatAbout = () => {
           🚀 Connect with people globally - login to send
           message! 💬
         </p>
-        <div className="flex justify-center">
-          {/* <Image
-            src="/home-img.svg"
-            alt="People chatting"
-            width={300}
-            height={300}
-            priority
-            className="object-contain"
-          /> */}
-        </div>
       </div>
     </div>
   );

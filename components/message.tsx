@@ -1,3 +1,4 @@
+"use strict"
 import { Imessage, useMessage } from "@/lib/store/messages";
 import React from "react";
 import Image from "next/image";
@@ -12,15 +13,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { useUser } from "@/lib/store/user";
+import { DEFAULT_AVATAR } from "@/constants";
 
 const Message = ({ message }: { message: Imessage }) => {
   const user = useUser((state) => state.user);
   const displayName = message.users?.display_name || "Me";
-  const avatarUrl = message.users?.avatar_url || "/echo-logo.png"; 
+  const avatarUrl = message.users?.avatar_url || DEFAULT_AVATAR; 
   const createdAt = new Date(message.created_at);
   const formattedTime = createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   const formattedDate = createdAt.toLocaleDateString();
-
+  console.log(displayName);
+  console.log(user?.user_metadata);
   const isCurrentUser = message.users?.id === user?.id;
 
   return (
@@ -32,6 +35,7 @@ const Message = ({ message }: { message: Imessage }) => {
           width={45}
           height={45}
           className={`rounded-lg shadow-xl ${isCurrentUser ? 'ml-4' : 'mr-4'}`}
+          unoptimized 
         />
       </div>
       
@@ -46,12 +50,13 @@ const Message = ({ message }: { message: Imessage }) => {
               {message.is_edit && (
                 <h1 className="text-xs font-light text-gray-400">edited</h1>
               )}
+              {isCurrentUser && <MessageMenu message={message} />}
             </div>
             <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`}>
               {message.text}
             </p>
           </div>
-          {/* {isCurrentUser && <MessageMenu message={message} />} */}
+          
         </div>
       </div>
     </div>
