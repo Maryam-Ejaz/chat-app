@@ -28,21 +28,22 @@ const MessagesList = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages" },
         async (payload) => {
+          console.log("Payload received on INSERT:", payload.new);
           if (!optimisticIds.includes(payload.new.id)) {
             const { error, data } = await supabase
               .from("users")
               .select("*")
-              .eq("id", payload.new.sent_by)
+              .eq("id", payload.new.send_by)
               .single();
-            if (error) {
-              toast.error(error.message);
-            } else {
+            // if (error) {
+            //   toast.error(error.message);
+            // } else {
               const newMessage = {
                 ...payload.new,
                 users: data,
               };
               addMessage(newMessage as unknown as Imessage);
-            }
+            // }
           }
           const scrollContainer = scrollRef.current;
           if (
@@ -70,7 +71,7 @@ const MessagesList = () => {
       .subscribe();
 
     return () => {
-      // channel.unsubscribe();
+      channel.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);

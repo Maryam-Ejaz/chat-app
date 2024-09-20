@@ -22,8 +22,6 @@ const Message = ({ message }: { message: Imessage }) => {
   const createdAt = new Date(message.created_at);
   const formattedTime = createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   const formattedDate = createdAt.toLocaleDateString();
-  console.log(displayName);
-  console.log(user?.user_metadata);
   const isCurrentUser = message.users?.id === user?.id;
 
   return (

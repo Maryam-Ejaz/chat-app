@@ -15,7 +15,7 @@ export const handleImageUpload = async (fileName: string, imageFile: File): Prom
 
   // Generate the file path for the uploaded image
   const filePath = `${fileName}`;
-  const expiresIn = 5000; // URL expiration time in seconds
+  const expiresIn = 5000000; // URL expiration time in seconds
 
   // Create a signed URL for the uploaded image
   const { data: signedUrlData, error: signedUrlError } = await supabase.storage
