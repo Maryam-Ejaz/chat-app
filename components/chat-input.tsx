@@ -52,7 +52,7 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="px-9 pb-5 z-index-50">
+    <div className="px-9 pb-6 z-index-50">
       <div className="w-full">
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
