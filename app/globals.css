@@ -95,7 +95,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground bg-blur;
+    @apply text-foreground bg-blur w-full h-screen;
   }
 }
 

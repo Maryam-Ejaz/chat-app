@@ -12,7 +12,7 @@ const Home = async () => {
 
   return (
     <>
-      <div className="w-screen mx-auto h-screen glass">
+      <div className="w-screen mx-auto glass">
         <div className="h-screen flex flex-col relative">
           <ChatHeader user={data.session?.user} />
           {data.session?.user ? (
