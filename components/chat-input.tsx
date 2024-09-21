@@ -1,6 +1,8 @@
+
+
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { supabaseClient } from "@/lib/backend/client";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -20,7 +22,6 @@ const ChatInput = () => {
 
   const [text, setText] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSendMessage = async (text: string) => {
     const user = useUser.getState().user;
@@ -56,29 +57,20 @@ const ChatInput = () => {
     setText(text + emoji.native);
   };
 
-  // Handle clicks outside the picker
-  const handleClickOutside = () => {
-    setShowEmojiPicker(false);
-  };
-
   return (
     <div className="px-9 pb-5">
       <div className="w-full">
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
-              ref={textareaRef}
               className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
               placeholder="Message"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  if (text.trim()) {
-                    handleSendMessage(text);
-                    setText("");
-                  }
-                  e.preventDefault(); // Prevent the default behavior (moving to next line)
+                if (e.key === "Enter" && text.trim()) {
+                  handleSendMessage(text);
+                  setText("");
                 }
               }}
             />
@@ -86,23 +78,13 @@ const ChatInput = () => {
             {/* Icon Picker */}
             <button
               className="absolute right-2 bottom-1 text-[var(--foreground-color)] opacity-50 hover:opacity-100 transition-opacity duration-300"
-              onClick={() => {
-                setShowEmojiPicker(!showEmojiPicker);
-                textareaRef.current?.focus();
-              }}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             >
               <SmileIcon className="h-5 w-5 mb-1 " />
             </button>
             {showEmojiPicker && (
-              <div className="absolute bottom-12 right-0 z-10 backdrop-blur-lg">
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} className={"backdrop-blur-lg"}
-                onClickOutside={handleClickOutside}
-                  style={{
-                    backgroundColor: "transparent",
-                    backdropFilter: "blur(10.6px)",
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  }} />
+              <div className="absolute bottom-16 left-2 z-10">
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
               </div>
             )}
 
@@ -135,3 +117,4 @@ const ChatInput = () => {
 };
 
 export default ChatInput;
+
