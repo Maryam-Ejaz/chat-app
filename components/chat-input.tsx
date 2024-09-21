@@ -116,7 +116,7 @@ const ChatInput = () => {
             </button>
 
             {showEmojiPicker && (
-              <div ref={emojiPickerRef} className="absolute bottom-16 right-[-33px] z-10 backdrop-blur-lg">
+              <div ref={emojiPickerRef} className="absolute bottom-12 right-[-33px] z-10 backdrop-blur-lg">
                 <EmojiPicker
                   onEmojiClick={handleEmojiClick}
                   emojiStyle={emojiStyle}
@@ -124,7 +124,7 @@ const ChatInput = () => {
                   theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
                   style={{
                     backgroundColor: "var(--background-color)",
-                    backdropFilter: "blur(10.6px)",
+                    backdropFilter: "blur(50.6px)",
                     borderRadius: "8px",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                   }}
