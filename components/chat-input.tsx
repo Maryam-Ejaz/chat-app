@@ -26,7 +26,7 @@ const ChatInput = () => {
 
   useEffect(() => {
     const updateEmojiStyle = () => {
-      setEmojiStyle(window.innerWidth < 768 ? EmojiStyle.NATIVE : EmojiStyle.GOOGLE);
+      setEmojiStyle(window.innerWidth < 1000 ? EmojiStyle.NATIVE : EmojiStyle.GOOGLE);
     };
 
     updateEmojiStyle();
