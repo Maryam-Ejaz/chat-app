@@ -31,7 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="glass">
+          <div className="glass overflow-y-auto">
 
           {children}
 
