@@ -31,11 +31,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="glass overflow-y-auto hide-scrollbar h-screen w-full">
+          
 
           {children}
 
-          </div>
+          
           <Toaster position="top-center" />
         </ThemeProvider>
         <Analytics />
