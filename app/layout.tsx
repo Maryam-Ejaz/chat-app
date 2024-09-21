@@ -31,7 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="glass overflow-y-auto h-full w-full">
+          <div className="glass overflow-y-auto hide-scrollbar h-full w-full">
 
           {children}
 
