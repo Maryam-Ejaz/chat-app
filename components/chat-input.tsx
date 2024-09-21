@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react"; 
 import { supabaseClient } from "@/lib/backend/client";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -8,8 +7,7 @@ import { useUser } from "@/lib/store/user";
 import { Imessage, useMessage } from "@/lib/store/messages";
 import { Textarea } from "@/components/ui/textarea";
 import { SmileIcon } from "lucide-react";
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import SendIcon from "@/components/svgs/send-icon";
 import { useTheme } from "next-themes";
 
@@ -21,11 +19,38 @@ const ChatInput = () => {
 
   const [text, setText] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const { theme } = useTheme();
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
+  const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.GOOGLE); // Default style
+
+  useEffect(() => {
+    const updateEmojiStyle = () => {
+      setEmojiStyle(window.innerWidth < 768 ? EmojiStyle.NATIVE : EmojiStyle.GOOGLE);
+    };
+
+    updateEmojiStyle();
+    window.addEventListener("resize", updateEmojiStyle);
+
+    return () => {
+      window.removeEventListener("resize", updateEmojiStyle);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSendMessage = async (text: string) => {
-    const user = useUser.getState().user;
     if (text.trim()) {
       const id = uuidv4();
       const newMessage = {
@@ -53,26 +78,18 @@ const ChatInput = () => {
     }
   };
 
-  // Handle emoji selection
-  const handleEmojiSelect = (emoji: any) => {
-    setText(text + emoji.native);
+  const handleEmojiClick = (emojiObject: any) => {
+    setText((prev) => prev + emojiObject.emoji);
+    textareaRef.current?.focus();
   };
-
-  // Handle clicks outside the picker
-  const handleClickOutside = () => {
-    setShowEmojiPicker(false);
-  };
-
-  // Check if the user is on a mobile device
-  const isMobile = /Mobi|Android/i.test(window.navigator.userAgent);
 
   return (
-    <div className="px-9 pb-5">
+    <div className="px-9 pb-5 z-index-50">
       <div className="w-full">
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
-              ref={textareaRef}
+              ref={textareaRef} 
               className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
               placeholder="Message"
               value={text}
@@ -83,37 +100,35 @@ const ChatInput = () => {
                     handleSendMessage(text);
                     setText("");
                   }
-                  e.preventDefault(); // Prevent the default behavior (moving to next line)
+                  e.preventDefault();
                 }
               }}
             />
 
-            {/* Icon Picker */}
             <button
               className="absolute right-2 bottom-1 text-[var(--foreground-color)] opacity-50 hover:opacity-100 transition-opacity duration-300"
               onClick={() => {
-                if (isMobile) {
-                  textareaRef.current?.focus(); 
-                } else {
-                  setShowEmojiPicker(!showEmojiPicker); 
-                  textareaRef.current?.focus(); 
-                }
+                setShowEmojiPicker((prev) => !prev);
+                textareaRef.current?.focus();
               }}
             >
-              <SmileIcon className="h-5 w-5 mb-1 " />
+              <SmileIcon className="h-5 w-5 mb-1" />
             </button>
+
             {showEmojiPicker && (
-              <div className="absolute bottom-12 right-0 z-10 backdrop-blur-lg">
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} className={"backdrop-blur-lg"}
-                  onClickOutside={handleClickOutside}
-                  autoFocus="true"
-                  theme={theme}
+              <div ref={emojiPickerRef} className="absolute bottom-16 right-[-33px] z-10 backdrop-blur-lg">
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  emojiStyle={emojiStyle}
+                  autoFocusSearch={false}
+                  theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
                   style={{
-                    backgroundColor: "transparent",
+                    backgroundColor: "var(--background-color)",
                     backdropFilter: "blur(10.6px)",
                     borderRadius: "8px",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  }} />
+                  }}
+                />
               </div>
             )}
           </div>
