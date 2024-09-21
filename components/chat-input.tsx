@@ -88,7 +88,7 @@ const ChatInput = () => {
                     setText((prev) => prev + emojiObject.emoji);
                     textareaRef.current?.focus(); // Focus the textarea after adding the emoji
                   }}
-                  emojiStyle={EmojiStyle.GOOGLE}
+                  emojiStyle={EmojiStyle.NATIVE}
                   theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
                   style={{
                     backgroundColor: "transparent",
