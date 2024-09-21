@@ -1,5 +1,6 @@
-"use client"
-import { useState, useRef } from "react"; // Import useRef
+"use client";
+
+import { useState, useRef } from "react";
 import { supabaseClient } from "@/lib/backend/client";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -7,9 +8,9 @@ import { useUser } from "@/lib/store/user";
 import { Imessage, useMessage } from "@/lib/store/messages";
 import { Textarea } from "@/components/ui/textarea";
 import { SmileIcon } from "lucide-react";
-import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import SendIcon from "@/components/svgs/send-icon";
-import { useTheme } from "next-themes";
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -19,8 +20,7 @@ const ChatInput = () => {
 
   const [text, setText] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
-  const { theme } = useTheme();
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null); // Create a ref for the textarea
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSendMessage = async (text: string) => {
     const user = useUser.getState().user;
@@ -51,13 +51,23 @@ const ChatInput = () => {
     }
   };
 
+  // Handle emoji selection
+  const handleEmojiSelect = (emoji: any) => {
+    setText(text + emoji.native);
+  };
+
+  // Handle clicks outside the picker
+  const handleClickOutside = () => {
+    setShowEmojiPicker(false);
+  };
+
   return (
-    <div className="px-9 pb-6 z-index-50">
+    <div className="px-9 pb-5">
       <div className="w-full">
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
-              ref={textareaRef} // Assign ref to the Textarea
+              ref={textareaRef}
               className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
               placeholder="Message"
               value={text}
@@ -73,32 +83,29 @@ const ChatInput = () => {
               }}
             />
 
-
             {/* Icon Picker */}
             <button
               className="absolute right-2 bottom-1 text-[var(--foreground-color)] opacity-50 hover:opacity-100 transition-opacity duration-300"
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              onClick={() => {
+                setShowEmojiPicker(!showEmojiPicker);
+                textareaRef.current?.focus();
+              }}
             >
-              <SmileIcon className="h-5 w-5 mb-1" />
+              <SmileIcon className="h-5 w-5 mb-1 " />
             </button>
             {showEmojiPicker && (
-              <div className="absolute bottom-16 right-2 z-10 backdrop-blur-lg">
-                <EmojiPicker
-                  onEmojiClick={(emojiObject) => {
-                    setText((prev) => prev + emojiObject.emoji);
-                    textareaRef.current?.focus(); // Focus the textarea after adding the emoji
-                  }}
-                  emojiStyle={EmojiStyle.NATIVE}
-                  theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
+              <div className="absolute bottom-12 right-0 z-10 backdrop-blur-lg">
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} className={"backdrop-blur-lg"}
+                onClickOutside={handleClickOutside}
                   style={{
                     backgroundColor: "transparent",
                     backdropFilter: "blur(10.6px)",
                     borderRadius: "8px",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                />
+                  }} />
               </div>
             )}
+
           </div>
           <div className="ml-4 mt-2 flex items-center">
             <button
@@ -117,6 +124,8 @@ const ChatInput = () => {
                 height={20}
                 color="var(--foreground-color)"
               />
+
+
             </button>
           </div>
         </div>
