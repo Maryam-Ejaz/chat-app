@@ -119,7 +119,6 @@ const MessagesList = () => {
 
   return (
     <>
-    <div className="overflow-y-auto hide-scrollbar h-full">
       <div className="flex flex-col h-[12vh] justify-center items-end bg-transparent relative">
         <div className="flex w-full mb-8 justify-between items-start px-5">
           <CompanyLogo
@@ -186,7 +185,6 @@ const MessagesList = () => {
           )}
         </div>
       )}
-      </div>
     </>
   );
 };
