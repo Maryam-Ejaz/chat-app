@@ -31,7 +31,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <div className="glass">
+
           {children}
+
+          </div>
           <Toaster position="top-center" />
         </ThemeProvider>
         <Analytics />

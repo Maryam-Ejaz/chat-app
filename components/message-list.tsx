@@ -7,6 +7,9 @@ import { supabaseClient } from "@/lib/backend/client";
 import { toast } from "sonner";
 import { ArrowDown } from "lucide-react";
 import LoadMoreMessages from "./load-more-messages";
+import CompanyLogo from "./svgs/company-logo";
+import OpusLogo from "./svgs/opus-logo";
+import OpusBox from "./svgs/opus-logo-box";
 
 const MessagesList = () => {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
@@ -38,11 +41,11 @@ const MessagesList = () => {
             // if (error) {
             //   toast.error(error.message);
             // } else {
-              const newMessage = {
-                ...payload.new,
-                users: data,
-              };
-              addMessage(newMessage as unknown as Imessage);
+            const newMessage = {
+              ...payload.new,
+              users: data,
+            };
+            addMessage(newMessage as unknown as Imessage);
             // }
           }
           const scrollContainer = scrollRef.current;
@@ -104,10 +107,48 @@ const MessagesList = () => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
 
+  const formatDate = (date: any) => {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+    const day = date.getDate();
+    const month = date.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
+    const year = date.getFullYear();
+
+    return `${weekday}, ${day} ${month} ${year}`;
+  };
+
   return (
     <>
+      <div className="flex flex-col h-[12vh] justify-center items-end bg-transparent relative">
+        <div className="flex w-full mb-8 justify-between items-start px-5">
+          <CompanyLogo
+            className="h-[5em] w-[7em] fill-current"
+
+          />
+
+          <div className="relative">
+            <OpusLogo
+              className="h-[5em] w-[7em] fill-current"
+
+            />
+            <OpusBox
+              className="absolute left-[-4px] top-1/2 transform -translate-y-1/2 h-[2em] w-[2em] fill-current"
+
+            />
+          </div>
+
+        </div>
+
+        {/* Today's Date */}
+        <div className="absolute bottom-0 right-2 mb-2 text-xs tracking-wide" style={{ letterSpacing: '0.1em' }}>
+          {formatDate(new Date())}
+        </div>
+      </div>
+
+
+
       <div
-        className="flex-1 flex flex-col p-5 h-full overflow-y-auto"
+        className="flex-1 flex flex-col p-5 h-full overflow-y-auto hide-scrollbar"
         ref={scrollRef}
         onScroll={handleOnScroll}
       >

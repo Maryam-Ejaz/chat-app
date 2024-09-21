@@ -13,7 +13,7 @@ const Home = async () => {
   return (
     <>
       <div className="w-[100%] mx-auto h-screen ">
-        <div className="h-screen border rounded-xl flex flex-col relative  relative">
+        <div className="h-screen flex flex-col relative ">
           <ChatHeader user={data.session?.user} />
           {data.session?.user ? (
             <>

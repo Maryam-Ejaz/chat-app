@@ -7,11 +7,10 @@ import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@/lib/store/user";
 import { Imessage, useMessage } from "@/lib/store/messages";
 import { Textarea } from "@/components/ui/textarea";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SmileIcon } from "lucide-react";
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
+import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
+import SendIcon from "@/components/svgs/send-icon";
+import { useTheme } from "next-themes"; // Import useTheme
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -21,6 +20,7 @@ const ChatInput = () => {
 
   const [text, setText] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const { theme } = useTheme(); // Get the current theme
 
   const handleSendMessage = async (text: string) => {
     const user = useUser.getState().user;
@@ -51,20 +51,14 @@ const ChatInput = () => {
     }
   };
 
-  // Handle emoji selection
-  const handleEmojiSelect = (emoji: any) => {
-    setText(text + emoji.native);
-    setShowEmojiPicker(false); // Hide emoji picker after selection
-  };
-
   return (
     <div className="px-9 pb-5">
       <div className="w-full">
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
-              className={`resize-none w-full border-b-2 border-[var(--foreground-color)]`}
-              placeholder="Send Message"
+              className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
+              placeholder="Message"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {
@@ -74,16 +68,27 @@ const ChatInput = () => {
                 }
               }}
             />
+
             {/* Icon Picker */}
             <button
-              className="absolute right-2 bottom-1 text-gray-500 hover:text-[var(--foreground-color)]"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="absolute right-2 bottom-1 text-[var(--foreground-color)] opacity-50 hover:opacity-100 transition-opacity duration-300"
+              onClick={() => setShowEmojiPicker((prev) => !prev)}
             >
               <SmileIcon className="h-5 w-5 mb-1" />
             </button>
             {showEmojiPicker && (
-              <div className="absolute bottom-16 left-2 z-10">
-                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+              <div className="absolute bottom-16 right-2 z-10 backdrop-blur-lg">
+                <EmojiPicker
+                  onEmojiClick={(emojiObject) => setText((prev) => prev + emojiObject.emoji)}
+                  emojiStyle={EmojiStyle.GOOGLE}
+                  theme={theme === "dark" ? Theme.DARK : Theme.LIGHT} // Set theme based on current theme
+                  style={{
+                    backgroundColor: "transparent",
+                    backdropFilter: "blur(10.6px)",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  }}
+                />
               </div>
             )}
           </div>
@@ -98,7 +103,12 @@ const ChatInput = () => {
               }}
               disabled={!text.trim()}
             >
-              <FontAwesomeIcon icon={faPaperPlane} className="h-5 w-5" />
+              <SendIcon
+                className="opacity-50 hover:opacity-100 transition-opacity duration-300"
+                width={20}
+                height={20}
+                color="var(--foreground-color)"
+              />
             </button>
           </div>
         </div>

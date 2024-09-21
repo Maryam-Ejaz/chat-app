@@ -27,7 +27,7 @@ const LoadMoreMessages = () => {
 
   if (hasMore) {
     return (
-      <Button variant="secondary" className="w-full" onClick={fetchMore}>
+      <Button variant="outline" className="w-full" onClick={fetchMore}>
         Load More
       </Button>
     );
