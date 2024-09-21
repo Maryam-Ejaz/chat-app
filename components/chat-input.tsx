@@ -22,7 +22,7 @@ const ChatInput = () => {
   const { theme } = useTheme();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
-  const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.GOOGLE); // Default style
+  const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.NATIVE); 
 
   useEffect(() => {
     const updateEmojiStyle = () => {
