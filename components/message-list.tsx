@@ -148,7 +148,7 @@ const MessagesList = () => {
 
 
       <div
-        className="flex-1 flex flex-col p-5 h-full overflow-y-auto hide-scrollbar"
+        className="flex-1 flex flex-col p-5 h-full overflow-y-auto"
         ref={scrollRef}
         onScroll={handleOnScroll}
       >
