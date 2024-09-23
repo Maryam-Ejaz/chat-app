@@ -23,6 +23,7 @@ const MessagesList = () => {
     optimisticUpdateMessage,
   } = useMessage((state) => state);
   const supabase = supabaseClient();
+  
 
   useEffect(() => {
     const channel = supabase

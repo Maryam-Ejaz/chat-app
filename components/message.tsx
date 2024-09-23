@@ -17,7 +17,6 @@ import { DEFAULT_AVATAR } from "@/constants";
 
 const Message = ({ message }: { message: Imessage }) => {
   const user = useUser((state) => state.user);
-  console.log(user?.user_metadata);
   const displayName = message.users?.display_name || "Me";
   const avatarUrl = message.users?.avatar_url || DEFAULT_AVATAR;
   const createdAt = new Date(message.created_at);

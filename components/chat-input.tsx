@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react"; 
+import { useState, useRef, useEffect } from "react";
 import { supabaseClient } from "@/lib/backend/client";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +10,7 @@ import { SmileIcon } from "lucide-react";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import SendIcon from "@/components/svgs/send-icon";
 import { useTheme } from "next-themes";
+import { useTypingIndicator } from "./typing-indicator";
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -21,7 +22,47 @@ const ChatInput = () => {
   const { theme } = useTheme();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
-  const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.NATIVE); 
+  const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.NATIVE);
+  const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+  const optimisticDeleteMessage = useMessage((state) => state.optimisticDeleteMessage);
+
+  // Store messages in state 
+  const [messages, setMessages] = useState<any[]>([]);
+
+  const addTypingMessage = (message: any) => {
+    setOptimisticIds(message.id);
+    addMessage(message);
+    setMessages((prev) => {
+      // Prevent duplicates
+      if (prev.find((m) => m.id === message.id)) return prev;
+      return [...prev, message];
+    });
+  };
+
+  const removeTypingMessage = (id: any) => {
+    setMessages((prev) => {
+      const updatedMessages = prev.filter((m) => m.id !== `${id}-typing`);
+      console.log(id, updatedMessages); // Log the ID and the updated messages
+      optimisticDeleteMessage(`${id}-typing`);
+      return updatedMessages;
+    });
+  };
+
+
+
+  useTypingIndicator(isTyping, addTypingMessage, removeTypingMessage);
+
+
+  const handleFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsInputFocused(false);
+    setIsTyping(false);
+  };
 
   useEffect(() => {
     const updateEmojiStyle = () => {
@@ -49,7 +90,18 @@ const ChatInput = () => {
     };
   }, []);
 
+  const resetTypingTimeout = () => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+    const newTimeout = setTimeout(() => {
+      setIsTyping(false); // Set typing to false after 1.5 second
+    }, 5000);
+    setTypingTimeout(newTimeout);
+  };
+
   const handleSendMessage = async (text: string) => {
+    setIsTyping(false);
     if (text.trim()) {
       const id = uuidv4();
       const newMessage = {
@@ -89,12 +141,20 @@ const ChatInput = () => {
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
-              ref={textareaRef} 
+              ref={textareaRef}
               className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
               placeholder="Message"
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onKeyDownCapture={handleFocus}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onChange={(e) => {
+                setText(e.target.value);
+                setIsTyping(true);
+                resetTypingTimeout(); // Reset timeout on typing
+              }}
               onKeyDown={(e) => {
+                resetTypingTimeout(); // Reset on key down
                 if (e.key === "Enter") {
                   if (text.trim()) {
                     handleSendMessage(text);
@@ -158,3 +218,4 @@ const ChatInput = () => {
 };
 
 export default ChatInput;
+

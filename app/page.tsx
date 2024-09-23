@@ -8,7 +8,6 @@ import ChatAbout from "@/components/chat-about";
 const Home = async () => {
   const supabase = supabaseServer();
   const { data } = await supabase.auth.getUser();
-  console.log(data.user?.user_metadata);
 
   return (
     <>
