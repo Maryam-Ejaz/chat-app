@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { LIMIT_MESSAGE } from "@/constants";
+import { UUID } from "crypto";
 
 export type Imessage = {
   created_at: string;
   id: string;
   is_edit: boolean;
-  sent_by: string;
+  sent_by: UUID;
   text: string;
   users: {
     avatar_url: string;

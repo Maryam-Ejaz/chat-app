@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import ChatPresence from "./chat-presence";
 import { ModeToggle } from "./mode toggle";
 import Link from "next/link";
-import { Download, LucideLogIn, LucideLogOut } from "lucide-react";
+import { LucideLogIn, LucideLogOut } from "lucide-react";
 
-const ChatHeader = ({ user }: { user: User | undefined }) => {
+const ChatHeader = ({ user }: { user: User | null }) => {
   const router = useRouter();
   const handleLogout = async () => {
     const supabase = supabaseClient();

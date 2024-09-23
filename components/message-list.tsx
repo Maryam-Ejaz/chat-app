@@ -38,15 +38,15 @@ const MessagesList = () => {
               .select("*")
               .eq("id", payload.new.send_by)
               .single();
-            // if (error) {
-            //   toast.error(error.message);
-            // } else {
-            const newMessage = {
-              ...payload.new,
-              users: data,
-            };
-            addMessage(newMessage as unknown as Imessage);
-            // }
+            if (error) {
+              toast.error(error.message);
+            } else {
+              const newMessage = {
+                ...payload.new,
+                users: data,
+              };
+              addMessage(newMessage as unknown as Imessage);
+            }
           }
           const scrollContainer = scrollRef.current;
           if (

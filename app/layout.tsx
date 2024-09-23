@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     default: "Echo",
   },
   description: "🚀 Stay connected",
-  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

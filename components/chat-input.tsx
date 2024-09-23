@@ -16,7 +16,6 @@ const ChatInput = () => {
   const addMessage = useMessage((state) => state.addMessage);
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
   const supabase = supabaseClient();
-
   const [text, setText] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const { theme } = useTheme();
@@ -61,12 +60,13 @@ const ChatInput = () => {
         created_at: new Date().toISOString(),
         users: {
           id: user?.id,
-          avatar_url: user?.user_metadata.avatar_url,
+          avatar_url: user?.user_metadata.user_metadata.avatar_url,
           created_at: new Date().toISOString(),
-          display_name: user?.user_metadata.user_name,
+          display_name: user?.user_metadata.user_metadata.display_name,
           email: user?.email,
         },
       };
+
       addMessage(newMessage as Imessage);
       setOptimisticIds(newMessage.id);
       const { error } = await supabase.from("messages").insert({ text, id });

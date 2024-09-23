@@ -7,15 +7,15 @@ import ChatAbout from "@/components/chat-about";
 
 const Home = async () => {
   const supabase = supabaseServer();
-  const { data } = await supabase.auth.getSession();
-  console.log(data);
+  const { data } = await supabase.auth.getUser();
+  console.log(data.user?.user_metadata);
 
   return (
     <>
       <div className="w-screen mx-auto glass h-full hide-scrollbar">
         <div className="h-screen flex flex-col relative hide-scrollbar">
-          <ChatHeader user={data.session?.user} />
-          {data.session?.user ? (
+          <ChatHeader user={data.user} />
+          {data.user ? (
             <>
               <ChatMessages />
               <ChatInput />
@@ -25,7 +25,7 @@ const Home = async () => {
           )}
         </div>
       </div>
-      <InitUser user={data.session?.user} />
+      <InitUser user={data.user} />
     </>
   );
 };

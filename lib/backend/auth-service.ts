@@ -2,7 +2,8 @@ import { DEFAULT_AVATAR } from "@/constants";
 import { supabaseClient } from "@/lib/backend/client";
 import { handleImageUpload } from "@/lib/backend/storage-service";
 import { createOrUpdateUser } from "@/lib/backend/user-service";
-
+import { useUser } from "../store/user";
+import { use } from "react";
 
 
 export const handleAnonymousLogin = async (name: string, imageFile: File | null) => {
