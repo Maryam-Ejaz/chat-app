@@ -10,6 +10,7 @@ import LoadMoreMessages from "./load-more-messages";
 import CompanyLogo from "./svgs/company-logo";
 import OpusLogo from "./svgs/opus-logo";
 import OpusBox from "./svgs/opus-logo-box";
+import { useUser } from "@/lib/store/user";
 
 const MessagesList = () => {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
@@ -17,13 +18,114 @@ const MessagesList = () => {
   const [notification, setNotification] = useState(0);
   const {
     messages,
+    setMessages,
     addMessage,
-    optimisticIds,
     optimisticDeleteMessage,
+    optimisticIds,
     optimisticUpdateMessage,
   } = useMessage((state) => state);
+  const addMessage_ = useMessage((state) => state.addMessage);
+  const setOptimisticIds_ = useMessage((state) => state.setOptimisticIds);
+  const optimisticDeleteMessage_ = useMessage(
+    (state) => state.optimisticDeleteMessage
+  );
   const supabase = supabaseClient();
-  
+  const user = useUser((state) => state.user);
+
+  function generateUUIDWithPrefix(prefix: string | any[]) {
+    // Ensure the prefix is at most 3 characters long
+    if (prefix.length > 3) {
+      throw new Error("Prefix can be at most 3 characters long.");
+    }
+
+    // Generate a random UUID (v4)
+    const uuid = crypto.randomUUID();
+
+    // Replace the first characters of the UUID with the prefix
+    const newUUID = prefix + uuid.slice(prefix.length);
+
+    return newUUID;
+  }
+
+  // Function to add a typing message
+  const addTypingMessage = async (message: any) => {
+
+
+    // Optimistically add the typing message to the state
+    addMessage_(message);
+
+    // // Insert the typing message into the database
+    // const { error } = await supabase.from("messages").insert({
+    //   id: message.id,
+    //   text: "Texting...", // Make sure to include the message text
+    //   send_by: message.sent_by, // Add the user who sent the typing message
+    //   is_edit: false,
+    //   created_at: new Date().toISOString(),
+    //   users: message.users // Include the user information if needed
+    // });
+
+    // // Handle any errors that occur during insertion
+    // if (error) {
+    //   toast.error("Sorry, this message couldn't be delivered.");
+    // }
+  };
+
+
+  // Function to remove a typing message
+  const removeTypingMessage = async (id: any) => {
+    console.log("DELETING", id);
+    optimisticDeleteMessage_(`${id}`);
+
+    // const { error } = await supabase
+    //   .from("messages")
+    //   .delete()
+    //   .eq("id", `${id}-typing`);
+
+    // if (error) {
+    //   toast.error(error.message);
+    // } else {
+    //   toast.success("Message deleted successfully");
+    // }
+    // setMessages((prev) => {
+    //   // const updatedMessages = prev.filter((m) => m.id !== `${id}-typing`);
+    //   optimisticDeleteMessage_(`${id}-typing`);
+    //   // return updatedMessages;
+    // });
+  };
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("type")
+      .on('broadcast', { event: 'typing' }, (response: any) => {
+        console.log("Received message:", response.payload.isTyping);
+        if (response.payload.userId != user?.id) {
+          if (response.payload.isTyping) {
+            addTypingMessage({
+              id: `${response.payload.userId}`,
+              text: `${response.payload.displayName} is typing...`,
+              send_by: response.payload.userId,
+              is_edit: false,
+              created_at: new Date().toISOString(),
+              users: {
+                id: response.payload.userId,
+                display_name: response.payload.displayName,
+                email: user?.email,
+                avatar_url: response.payload.avatarUrl,
+                created_at: new Date().toISOString(),
+              },
+            });
+          } else {
+            removeTypingMessage(response.payload.userId); // Pass userId to remove message
+          }
+        }
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   useEffect(() => {
     const channel = supabase
@@ -72,6 +174,29 @@ const MessagesList = () => {
           optimisticUpdateMessage(payload.new as Imessage);
         }
       )
+      .on('broadcast', { event: 'typing' }, (response: any) => {
+        console.log("Received message:", response.payload.isTyping);
+        if (response.payload.userId != user?.id) {
+          if (response.payload.isTyping) {
+            addTypingMessage({
+              id: `${response.payload.userId}`,
+              text: `${response.payload.displayName} is typing...`,
+              send_by: response.payload.userId,
+              is_edit: false,
+              created_at: new Date().toISOString(),
+              users: {
+                id: response.payload.userId,
+                display_name: response.payload.displayName,
+                email: user?.email,
+                avatar_url: response.payload.avatarUrl,
+                created_at: new Date().toISOString(),
+              },
+            });
+          } else {
+            removeTypingMessage(response.payload.userId); // Pass userId to remove message
+          }
+        }
+      })
       .subscribe();
 
     return () => {
@@ -79,6 +204,8 @@ const MessagesList = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
+
+
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -117,6 +244,7 @@ const MessagesList = () => {
 
     return `${weekday}, ${day} ${month} ${year}`;
   };
+
 
   return (
     <>

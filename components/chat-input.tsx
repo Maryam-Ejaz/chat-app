@@ -23,44 +23,14 @@ const ChatInput = () => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.NATIVE);
-  const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
-  const optimisticDeleteMessage = useMessage((state) => state.optimisticDeleteMessage);
-
-  // Store messages in state 
-  const [messages, setMessages] = useState<any[]>([]);
-
-  const addTypingMessage = (message: any) => {
-    setOptimisticIds(message.id);
-    addMessage(message);
-    setMessages((prev) => {
-      // Prevent duplicates
-      if (prev.find((m) => m.id === message.id)) return prev;
-      return [...prev, message];
-    });
-  };
-
-  const removeTypingMessage = (id: any) => {
-    setMessages((prev) => {
-      const updatedMessages = prev.filter((m) => m.id !== `${id}-typing`);
-      console.log(id, updatedMessages); // Log the ID and the updated messages
-      optimisticDeleteMessage(`${id}-typing`);
-      return updatedMessages;
-    });
-  };
 
 
+  useTypingIndicator(isTyping);
 
-  useTypingIndicator(isTyping, addTypingMessage, removeTypingMessage);
-
-
-  const handleFocus = () => {
-    setIsInputFocused(true);
-  };
 
   const handleBlur = () => {
-    setIsInputFocused(false);
     setIsTyping(false);
   };
 
@@ -145,8 +115,6 @@ const ChatInput = () => {
               className={`resize-none w-full border-b-2 border-[var(--foreground-color)] opacity-50 hover:opacity-100 focus:opacity-100`}
               placeholder="Message"
               value={text}
-              onKeyDownCapture={handleFocus}
-              onFocus={handleFocus}
               onBlur={handleBlur}
               onChange={(e) => {
                 setText(e.target.value);
@@ -154,7 +122,6 @@ const ChatInput = () => {
                 resetTypingTimeout(); // Reset timeout on typing
               }}
               onKeyDown={(e) => {
-                resetTypingTimeout(); // Reset on key down
                 if (e.key === "Enter") {
                   if (text.trim()) {
                     handleSendMessage(text);
