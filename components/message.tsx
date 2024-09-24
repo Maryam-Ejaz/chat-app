@@ -24,22 +24,49 @@ const Message = ({ message }: { message: Imessage }) => {
   const formattedDate = createdAt.toLocaleDateString('en-GB');
   const isCurrentUser = message.users?.id === user?.id;
 
+  function isUUIDWithTestPrefix(uuid: string): boolean {
+    const prefix = "test";
+  
+    // Check if the UUID starts with the "test" prefix
+    return uuid.startsWith(prefix);
+  }  
+
 
   return (
     <div className={`flex ${isCurrentUser ? 'flex-row-reverse mr-[-12px]' : 'mr-4'} gap-2`}>
-      <div className={`flex ${isCurrentUser ? 'flex-row-reverse ' : ''}`}>
+      <div className={`flex ${isCurrentUser ? 'flex-row-reverse ml-4' : 'mr-4'}`}>
         {isCurrentUser && <MessageMenu message={message} />}
-        <div>
-          <Image
-            src={avatarUrl}
-            alt={displayName}
-            width={45}
-            height={45}
-            className={`rounded-lg shadow-xl ${isCurrentUser ? 'ml-4' : 'mr-4'}`}
-            style={{ objectFit: 'cover', height: '45px' }}
-            unoptimized
-          />
-        </div>
+      {isUUIDWithTestPrefix(message.id)&&
+      
+       
+  <div className="darksoul-gradient-card3 animate-border">
+    <div className="relative p-[1px] z-10 ">
+      <Image
+        src={avatarUrl}
+        alt={displayName}
+        width={45}
+        height={45}
+        className="rounded-lg shadow-xl"
+        style={{ objectFit: 'cover', height: '45px' }}
+        unoptimized
+      />
+    </div>
+  </div>}
+  {!isUUIDWithTestPrefix(message.id)&&
+    <div>
+    <Image
+      src={avatarUrl}
+      alt={displayName}
+      width={45}
+      height={45}
+      className={`rounded-lg shadow-xl`}
+      style={{ objectFit: 'cover', height: '45px' }}
+      unoptimized
+    />
+  </div>
+  }
+
+
       </div>
 
       <div className={`flex-1 overflow-x-hidden ${isCurrentUser ? 'text-right' : ''}`}>

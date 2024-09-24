@@ -32,41 +32,29 @@ const MessagesList = () => {
   const supabase = supabaseClient();
   const user = useUser((state) => state.user);
 
-  function generateUUIDWithPrefix(prefix: string | any[]) {
-    // Ensure the prefix is at most 3 characters long
-    if (prefix.length > 3) {
-      throw new Error("Prefix can be at most 3 characters long.");
-    }
-
-    // Generate a random UUID (v4)
-    const uuid = crypto.randomUUID();
-
-    // Replace the first characters of the UUID with the prefix
-    const newUUID = prefix + uuid.slice(prefix.length);
-
+  function generateUUIDWithPrefix(userUUID: string) {
+    const prefix = "test"; // Prefix is fixed as "test"
+  
+    // Extract the last 4 characters from the first segment of the UUID
+    const lastFourOfFirstSegment = userUUID.split("-")[0].slice(-4);
+  
+    // Construct the new UUID with the "test" prefix and append the remaining part of the original UUID to detect for UI changes
+    const newUUID = `${prefix}${lastFourOfFirstSegment}-${userUUID.split("-").slice(1).join("-")}`;
+  
     return newUUID;
   }
+  
 
   // Function to add a typing message
   const addTypingMessage = async (message: any) => {
-    // Optimistically add the typing message to the state
     addMessage_(message);
   };
 
   // Function to remove a typing message
   const removeTypingMessage = async (id: any) => {
-    console.log("DELETING", id);
-    await optimisticDeleteMessage_(`${id}`);
+    var id_ = id.toString();
+    await optimisticDeleteMessage_(`${generateUUIDWithPrefix(id_)}`);
   };
-//  // Function to remove a typing message
-// const removeTypingMessage = async (id: any, delay: number = 500) => { // default delay of 1000ms (1 second)
-//   console.log("DELETING", id);
-  
-//   // Adding a delay before calling optimisticDeleteMessage
-//   setTimeout(async () => {
-//     await optimisticDeleteMessage_(`${id}`);
-//   }, delay);
-// };
 
 
   useEffect(() => {
@@ -77,7 +65,7 @@ const MessagesList = () => {
         if (response.payload.userId != user?.id) {
           if (response.payload.isTyping) {
             addTypingMessage({
-              id: `${response.payload.userId}`,
+              id: generateUUIDWithPrefix(response.payload.userId),
               text: `${response.payload.displayName} is typing...`,
               send_by: response.payload.userId,
               is_edit: false,

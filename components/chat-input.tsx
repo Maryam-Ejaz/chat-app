@@ -89,7 +89,7 @@ const ChatInput = () => {
         },
       };
   
-      const delay = 800; // Delay in milliseconds
+      const delay = 400; // Delay in milliseconds
   
       // Adding a delay before calling addMessage
       setTimeout(async () => {
