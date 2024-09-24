@@ -66,7 +66,7 @@ const ChatInput = () => {
     }
     const newTimeout = setTimeout(() => {
       setIsTyping(false); // Set typing to false after 1.5 second
-    }, 5000);
+    }, 1500);
     setTypingTimeout(newTimeout);
   };
 
@@ -88,17 +88,25 @@ const ChatInput = () => {
           email: user?.email,
         },
       };
-
-      addMessage(newMessage as Imessage);
-      setOptimisticIds(newMessage.id);
-      const { error } = await supabase.from("messages").insert({ text, id });
-      if (error) {
-        toast.error("Sorry, this message couldn't be delivered.");
-      }
+  
+      const delay = 800; // Delay in milliseconds
+  
+      // Adding a delay before calling addMessage
+      setTimeout(async () => {
+        addMessage(newMessage as Imessage);
+        setOptimisticIds(newMessage.id);
+  
+        // Send the message to the database after the delay
+        const { error } = await supabase.from("messages").insert({ text, id });
+        if (error) {
+          toast.error("Sorry, this message couldn't be delivered.");
+        }
+      }, delay);
     } else {
       toast.error("Message cannot be empty!!");
     }
   };
+  
 
   const handleEmojiClick = (emojiObject: any) => {
     setText((prev) => prev + emojiObject.emoji);

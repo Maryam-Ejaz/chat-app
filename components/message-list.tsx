@@ -53,16 +53,20 @@ const MessagesList = () => {
     addMessage_(message);
   };
 
-
- // Function to remove a typing message
-const removeTypingMessage = async (id: any, delay: number = 500) => { // default delay of 1000ms (1 second)
-  console.log("DELETING", id);
-  
-  // Adding a delay before calling optimisticDeleteMessage
-  setTimeout(async () => {
+  // Function to remove a typing message
+  const removeTypingMessage = async (id: any) => {
+    console.log("DELETING", id);
     await optimisticDeleteMessage_(`${id}`);
-  }, delay);
-};
+  };
+//  // Function to remove a typing message
+// const removeTypingMessage = async (id: any, delay: number = 500) => { // default delay of 1000ms (1 second)
+//   console.log("DELETING", id);
+  
+//   // Adding a delay before calling optimisticDeleteMessage
+//   setTimeout(async () => {
+//     await optimisticDeleteMessage_(`${id}`);
+//   }, delay);
+// };
 
 
   useEffect(() => {
