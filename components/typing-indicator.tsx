@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/lib/backend/client";
 import { useEffect, useRef } from "react";
 import { useUser } from "@/lib/store/user";
-import { useMessage } from "@/lib/store/messages";
+import { throttle } from "lodash";
 
 const TYPING_EVENT = "typing";
 
@@ -16,7 +16,7 @@ export const useTypingIndicator = (
 
 
   useEffect(() => {
-    const sendTypingIndicator = (isTypingValue: boolean) => {
+    const sendTypingIndicator = throttle((isTypingValue: boolean) => {
       console.log("BROADCASTING");
       supabase.channel("type").send({
         type: "broadcast",
@@ -30,7 +30,7 @@ export const useTypingIndicator = (
       });
 
 
-    };
+    }, 3000);
 
 
     sendTypingIndicator(isTyping);

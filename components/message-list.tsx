@@ -49,49 +49,21 @@ const MessagesList = () => {
 
   // Function to add a typing message
   const addTypingMessage = async (message: any) => {
-
-
     // Optimistically add the typing message to the state
     addMessage_(message);
-
-    // // Insert the typing message into the database
-    // const { error } = await supabase.from("messages").insert({
-    //   id: message.id,
-    //   text: "Texting...", // Make sure to include the message text
-    //   send_by: message.sent_by, // Add the user who sent the typing message
-    //   is_edit: false,
-    //   created_at: new Date().toISOString(),
-    //   users: message.users // Include the user information if needed
-    // });
-
-    // // Handle any errors that occur during insertion
-    // if (error) {
-    //   toast.error("Sorry, this message couldn't be delivered.");
-    // }
   };
 
 
-  // Function to remove a typing message
-  const removeTypingMessage = async (id: any) => {
-    console.log("DELETING", id);
-    optimisticDeleteMessage_(`${id}`);
+ // Function to remove a typing message
+const removeTypingMessage = async (id: any, delay: number = 500) => { // default delay of 1000ms (1 second)
+  console.log("DELETING", id);
+  
+  // Adding a delay before calling optimisticDeleteMessage
+  setTimeout(async () => {
+    await optimisticDeleteMessage_(`${id}`);
+  }, delay);
+};
 
-    // const { error } = await supabase
-    //   .from("messages")
-    //   .delete()
-    //   .eq("id", `${id}-typing`);
-
-    // if (error) {
-    //   toast.error(error.message);
-    // } else {
-    //   toast.success("Message deleted successfully");
-    // }
-    // setMessages((prev) => {
-    //   // const updatedMessages = prev.filter((m) => m.id !== `${id}-typing`);
-    //   optimisticDeleteMessage_(`${id}-typing`);
-    //   // return updatedMessages;
-    // });
-  };
 
   useEffect(() => {
     const channel = supabase
@@ -174,29 +146,6 @@ const MessagesList = () => {
           optimisticUpdateMessage(payload.new as Imessage);
         }
       )
-      .on('broadcast', { event: 'typing' }, (response: any) => {
-        console.log("Received message:", response.payload.isTyping);
-        if (response.payload.userId != user?.id) {
-          if (response.payload.isTyping) {
-            addTypingMessage({
-              id: `${response.payload.userId}`,
-              text: `${response.payload.displayName} is typing...`,
-              send_by: response.payload.userId,
-              is_edit: false,
-              created_at: new Date().toISOString(),
-              users: {
-                id: response.payload.userId,
-                display_name: response.payload.displayName,
-                email: user?.email,
-                avatar_url: response.payload.avatarUrl,
-                created_at: new Date().toISOString(),
-              },
-            });
-          } else {
-            removeTypingMessage(response.payload.userId); // Pass userId to remove message
-          }
-        }
-      })
       .subscribe();
 
     return () => {
