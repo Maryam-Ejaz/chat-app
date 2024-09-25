@@ -32,6 +32,15 @@ const MessagesList = () => {
   const supabase = supabaseClient();
   const user = useUser((state) => state.user);
 
+interface UserData {
+  id: string;
+  created_at: string;
+  email: string;
+  display_name: string;
+  avatar_url: string;
+  colour: string; 
+}
+
   function generateUUIDWithPrefix(userUUID: string) {
     const prefix = "test"; // Prefix is fixed as "test"
   
@@ -56,13 +65,44 @@ const MessagesList = () => {
     await optimisticDeleteMessage_(`${generateUUIDWithPrefix(id_)}`);
   };
 
+//   // Function to fetch user data, including the color, based on userId
+// const getUserColor = async (userId: string): Promise<string | null> => {
+//   const supabase = supabaseClient();
+
+//   try {
+//     // Explicitly specify the type of data you expect to get
+//     const { data, error } = await supabase
+//       .from("users")
+//       .select("*")
+//       .eq("id", userId)
+//       .single();
+
+//     if (error) {
+//       console.error("Error fetching user data:", error.message);
+//       return null; // Handle error appropriately
+//     }
+
+//     // Log the full data object for debugging
+//     console.log("Fetched user data:", data);
+
+//     // Return the color from user data; ensure the field name matches your database schema
+//     return data || "#000000"; 
+//   } catch (error) {
+//     console.error("Error retrieving user color:", error);
+//     return null;
+//   }
+// };
+
 
   useEffect(() => {
+    
     const channel = supabase
       .channel("type")
-      .on('broadcast', { event: 'typing' }, (response: any) => {
+      .on('broadcast', { event: 'typing' }, async (response: any) => {
         console.log("Received message:", response.payload.isTyping);
         if (response.payload.userId != user?.id) {
+          // // Fetch the user's color from the database
+          // const userColor = await getUserColor(response.payload.userId);
           if (response.payload.isTyping) {
             addTypingMessage({
               id: generateUUIDWithPrefix(response.payload.userId),
@@ -76,8 +116,10 @@ const MessagesList = () => {
                 email: user?.email,
                 avatar_url: response.payload.avatarUrl,
                 created_at: new Date().toISOString(),
+                colour: response.payload.colour,
               },
             });
+            console.log(`Colour ${response.payload.colour}`)
           } else {
             removeTypingMessage(response.payload.userId); // Pass userId to remove message
           }

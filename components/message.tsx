@@ -1,6 +1,6 @@
 "use strict"
 import { Imessage, useMessage } from "@/lib/store/messages";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 
 import {
@@ -14,6 +14,7 @@ import {
 import { Edit2, MoreVertical } from "lucide-react";
 import { useUser } from "@/lib/store/user";
 import { DEFAULT_AVATAR } from "@/constants";
+import setBodyColor from "@/lib/setColor";
 
 const Message = ({ message }: { message: Imessage }) => {
   const user = useUser((state) => state.user);
@@ -31,6 +32,11 @@ const Message = ({ message }: { message: Imessage }) => {
     return uuid.startsWith(prefix);
   }  
 
+  useEffect(() => {
+    // Set the gradient color when the component mounts
+    setBodyColor({ color: message.users?.colour || ""});
+}, [message.users?.colour]);
+
 
   return (
     <div className={`flex ${isCurrentUser ? 'flex-row-reverse mr-[-12px]' : 'mr-4'} gap-2`}>
@@ -38,20 +44,24 @@ const Message = ({ message }: { message: Imessage }) => {
         {isCurrentUser && <MessageMenu message={message} />}
       {isUUIDWithTestPrefix(message.id)&&
       
-       
-  <div className="darksoul-gradient-card3 animate-border">
-    <div className="relative p-[1px] z-10 ">
-      <Image
+  <div className="relative flex h-full w-full ml-[-4px]">
+    <Image
         src={avatarUrl}
         alt={displayName}
         width={45}
         height={45}
-        className="rounded-lg shadow-xl"
+        className="rounded-lg shadow-xl pic"
         style={{ objectFit: 'cover', height: '45px' }}
         unoptimized
       />
+  <div className="conic">
+    
+    <div className="relative w-[56px] h-[53px]  p-[1px] z-10 ">
+      
     </div>
+  </div>
   </div>}
+  
   {!isUUIDWithTestPrefix(message.id)&&
     <div>
     <Image

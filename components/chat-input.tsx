@@ -11,6 +11,7 @@ import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
 import SendIcon from "@/components/svgs/send-icon";
 import { useTheme } from "next-themes";
 import { useTypingIndicator } from "./typing-indicator";
+import { getAssignedColor } from "@/lib/getColor";
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -86,6 +87,7 @@ const ChatInput = () => {
           created_at: new Date().toISOString(),
           display_name: user?.user_metadata.user_metadata.display_name,
           email: user?.email,
+          colour: getAssignedColor(user?.id || "")
         },
       };
   
@@ -109,7 +111,7 @@ const ChatInput = () => {
   
 
   const handleEmojiClick = (emojiObject: any) => {
-    setText((prev) => prev + emojiObject.emoji);
+    setText((prev) => prev + emojiObject);
     textareaRef.current?.focus();
   };
 

@@ -4,6 +4,7 @@ import { handleImageUpload } from "@/lib/backend/storage-service";
 import { createOrUpdateUser } from "@/lib/backend/user-service";
 import { useUser } from "../store/user";
 import { use } from "react";
+import { getAssignedColor } from "../getColor";
 
 
 export const handleAnonymousLogin = async (name: string, imageFile: File | null) => {
@@ -45,8 +46,11 @@ export const handleAnonymousLogin = async (name: string, imageFile: File | null)
     }
 
     try {
+        // Assign a color to the user using the utility function
+        const assignedColor = getAssignedColor(userId);
+
       // Create or update user in the 'user' table
-      await createOrUpdateUser(userId, userName, imageUrl);
+      await createOrUpdateUser(userId, userName, imageUrl, assignedColor);
 
       // Update user metadata in Supabase
       const { error: metadataError } = await supabase.auth.updateUser({

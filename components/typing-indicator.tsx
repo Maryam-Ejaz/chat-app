@@ -2,6 +2,7 @@ import { supabaseClient } from "@/lib/backend/client";
 import { useEffect, useRef } from "react";
 import { useUser } from "@/lib/store/user";
 import { throttle } from "lodash";
+import { getAssignedColor } from "@/lib/getColor";
 
 const TYPING_EVENT = "typing";
 
@@ -26,6 +27,7 @@ export const useTypingIndicator = (
           displayName: user?.user_metadata.user_metadata.display_name,
           avatarUrl: user?.user_metadata.user_metadata.avatar_url,
           isTyping: isTypingValue,
+          colour: getAssignedColor(user?.id || "")
         },
       });
 

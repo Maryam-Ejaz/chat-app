@@ -1,7 +1,6 @@
 import { supabaseClient } from "@/lib/backend/client";
-import { randomUUID } from "crypto";
 
-export const createOrUpdateUser = async (userId: string, name: string, avatarUrl: string) => {
+export const createOrUpdateUser = async (userId: string, name: string, avatarUrl: string, assignedColor: string) => {
   const supabase = supabaseClient();
 
   // Update user metadata
@@ -23,6 +22,7 @@ export const createOrUpdateUser = async (userId: string, name: string, avatarUrl
     display_name: name,
     avatar_url: avatarUrl,
     email: "anonymous@example.com", 
+    colour: assignedColor,
   });
 
   if (dbError) {
