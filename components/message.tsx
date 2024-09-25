@@ -15,7 +15,6 @@ import { Edit2, MoreVertical } from "lucide-react";
 import { useUser } from "@/lib/store/user";
 import { DEFAULT_AVATAR } from "@/constants";
 import setBodyColor from "@/lib/setColor";
-import typingIcon from "./svgs/typing-icon";
 import TypingIcon from "./svgs/typing-icon";
 
 const Message = ({ message }: { message: Imessage }) => {
@@ -42,8 +41,12 @@ const Message = ({ message }: { message: Imessage }) => {
 
   return (
     <div className={`flex ${isCurrentUser ? 'flex-row-reverse mr-[-12px]' : 'mr-4'} gap-2`}>
-      <div className={`flex ${isCurrentUser ? 'flex-row-reverse ml-4' : 'mr-4'}`}>
+      <div className={`flex items-start ${isCurrentUser ? 'flex-row-reverse ml-4' : 'mr-4'}`}>
+        <div className={`flex  mt-2`}>
         {isCurrentUser && <MessageMenu message={message} />}
+
+        </div>
+        
         {isUUIDWithTestPrefix(message.id) &&
 
           <div className="relative flex h-full w-full ml-[-4px]">
@@ -93,12 +96,16 @@ const Message = ({ message }: { message: Imessage }) => {
                 <h1 className="font-light" style={{ fontSize: '10px' }}><Edit2 size={10} /></h1>
               )}
             </div>
-            <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`}>
+            <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`} 
+            style={{
+              wordBreak: 'break-word', 
+              overflowWrap: 'break-word', 
+            }}>
               {isUUIDWithTestPrefix(message.id) ? (
-                <span className="flex items-center gap-2"> {/* Flex container to align icon and text */}
-                  <TypingIcon className="w-4 h-4" /> {/* Adjust the size of the TypingIcon if needed */}
-                  Typing...
-                </span>
+                <span className="flex items-center gap-2">
+                <TypingIcon className="w-4 h-4" />
+                <span className="typing-dots">Typing<span className="dots"></span></span>
+              </span>
               ) : (
                 message.text
               )}

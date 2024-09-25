@@ -233,3 +233,31 @@
   position: relative;
   z-index: 10;
 }
+
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dots::after {
+  content: '';
+  display: inline-block;
+  width: 1em; /* Adjust width to your liking */
+  text-align: left;
+  animation: dots 1.5s steps(3, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: '';
+  }
+  33% {
+    content: '.';
+  }
+  66% {
+    content: '..';
+  }
+  100% {
+    content: '...';
+  }
+}
