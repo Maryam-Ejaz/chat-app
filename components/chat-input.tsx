@@ -90,14 +90,14 @@ const ChatInput = () => {
           colour: getAssignedColor(user?.id || "")
         },
       };
-  
+
       const delay = 400; // Delay in milliseconds
-  
+
       // Adding a delay before calling addMessage
       setTimeout(async () => {
         addMessage(newMessage as Imessage);
         setOptimisticIds(newMessage.id);
-  
+
         // Send the message to the database after the delay
         const { error } = await supabase.from("messages").insert({ text, id });
         if (error) {
@@ -108,7 +108,7 @@ const ChatInput = () => {
       toast.error("Message cannot be empty!!");
     }
   };
-  
+
 
   const handleEmojiClick = (emojiObject: any) => {
     setText((prev) => prev + emojiObject);

@@ -6,14 +6,14 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family:  "Twemoji Mozilla",
-  "Apple Color Emoji",
-  "Segoe UI Emoji",
-  "Segoe UI Symbol",
-  "Noto Color Emoji",
-  "EmojiOne Color",
-  "Android Emoji",
-  "Google Emoji";
+  font-family: "Twemoji Mozilla",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji",
+    "EmojiOne Color",
+    "Android Emoji",
+    "Google Emoji";
 }
 
 @layer base {
@@ -105,21 +105,21 @@
 }
 
 
-.hole{
+.hole {
   position: relative;
   width: 200%;
-		height: 200%;
+  height: 200%;
   mask:
-  var(--box--border__top-left) 0 0 / .625rem .625rem,
-  var(--box--border__top) .625rem 0 / calc(100% - 1.25rem) .625rem,
-  var(--box--border__top-right) 100% 0 / .625rem .625rem,
-  var(--box--border__left) 0 .625rem / .625rem calc(100% - 1.25rem),
-  var(--box--border__right) 100% .625rem / .625rem calc(100% - 1.25rem),
-  var(--box--border__bottom-left) 0 100% / .625rem .625rem,
-  var(--box--border__bottom) .625rem 100% / calc(100% - 1.25rem) .625rem,
-  var(--box--border__bottom-right) 100% 100% / .625rem .625rem;
+    var(--box--border__top-left) 0 0 / .625rem .625rem,
+    var(--box--border__top) .625rem 0 / calc(100% - 1.25rem) .625rem,
+    var(--box--border__top-right) 100% 0 / .625rem .625rem,
+    var(--box--border__left) 0 .625rem / .625rem calc(100% - 1.25rem),
+    var(--box--border__right) 100% .625rem / .625rem calc(100% - 1.25rem),
+    var(--box--border__bottom-left) 0 100% / .625rem .625rem,
+    var(--box--border__bottom) .625rem 100% / calc(100% - 1.25rem) .625rem,
+    var(--box--border__bottom-right) 100% 100% / .625rem .625rem;
   background-clip: padding-box;
-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 
 }
 
@@ -130,12 +130,12 @@ mask-repeat: no-repeat;
   align-items: center;
   background: linear-gradient(var(--gradient-angle), rgb(205, 3, 255), transparent, transparent);
   border-radius: 10px;
-  animation: rotation 5s linear 0s infinite normal forwards;
+  animation: rotation 3s linear 0s infinite normal forwards;
   position: relative;
   background-clip: padding-box;
   overflow: hidden;
 
-  
+
 }
 
 .pic {
@@ -148,138 +148,68 @@ mask-repeat: no-repeat;
 
 
 .conic {
-	position: relative;
-	z-index: -1;
-	border-radius: 10px;
-	overflow: hidden;
-	padding: 0.1rem;
+  position: relative;
+  z-index: -1;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0.1rem;
   display: grid;
   place-items: center;
   grid-template-areas:
-                  "inner-div";
-  
-  
+    "inner-div";
 
-  mask: 
-    linear-gradient(rgb(246, 245, 245) 0 0) content-box, /* Main content area */
-    linear-gradient(white 0 0); /* Mask to create the cutout */
-  -webkit-mask-composite: destination-out; /* Composite for webkit browsers */
-  mask-composite: exclude; /* Mask composition for other browsers */
-  
-  box-sizing: border-box; /* Ensures padding doesn’t affect the element size */
+
+
+  mask:
+    linear-gradient(rgb(246, 245, 245) 0 0) content-box,
+    linear-gradient(white 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+
+  box-sizing: border-box;
 
   mask-border-mode: alpha;
-  
-	
-	&::before {
-		content: '';
-		position: absolute;
-		z-index: -2;
-		left: -50%;
-		top: -50%;
-		width: 200%;
-		height: 200%;
-		background-color: transparent;
-		background-repeat: no-repeat;
-		background-position: 0 0;
-		background-image: conic-gradient(transparent, var(--gradient-color, rgba(168, 239, 255, 1)), transparent 50%); 
-		animation: rotate 4s linear infinite;
-	}
-	
-	&::after {
-		content: '';
-		position: absolute;
-		z-index: -1;
-		left: 30px;
-		top: 30px;
-		width: calc(57% - 12px);
-		height: calc(57% - 12px);
-		background: transparent;
-		border-radius: 10px;
+
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    left: -50%;
+    top: -50%;
+    width: 200%;
+    height: 200%;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-image: conic-gradient(transparent, var(--gradient-color, rgba(168, 239, 255, 1)), transparent 50%);
+    animation: rotate 3s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 30px;
+    top: 30px;
+    width: calc(57% - 12px);
+    height: calc(57% - 12px);
+    background: transparent;
+    border-radius: 10px;
 
     background-clip: padding-box;
-    
-    
-  box-sizing: border-box; /* Ensures padding doesn’t affect the element size */
-	}
+
+
+    box-sizing: border-box;
+  }
 }
 
 @keyframes rotate {
-	100% {
-		transform: rotate(1turn);
-	}
-}
-
-
-/* motion */
-@keyframes gradient-animation {
-  0% {
-    background-position: 15% 0%;
-  }
-  50% {
-    background-position: 85% 100%;
-  }
   100% {
-    background-position: 15% 0%;
+    transform: rotate(1turn);
   }
 }
 
-@keyframes frame-enter {
-  0% {
-    clip-path: polygon(0% 100%, 3px 100%, 3px 3px, calc(100% - 3px) 3px, calc(100% - 3px) calc(100% - 3px), 3px calc(100% - 3px), 3px 100%, 100% 100%, 100% 0%, 0% 0%);
-  }
-  25% {
-    clip-path: polygon(0% 100%, 3px 100%, 3px 3px, calc(100% - 3px) 3px, calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) 100%, 100% 100%, 100% 0%, 0% 0%);
-  }
-  50% {
-    clip-path: polygon(0% 100%, 3px 100%, 3px 3px, calc(100% - 3px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 3px, 100% 0%, 0% 0%);
-  }
-  75% {
-    -webkit-clip-path: polygon(0% 100%, 3px 100%, 3px 3px, 3px 3px, 3px 3px, 3px 3px, 3px 3px, 3px 3px, 3px 0%, 0% 0%);
-  }
-  100% {
-    -webkit-clip-path: polygon(0% 100%, 3px 100%, 3px 100%, 3px 100%, 3px 100%, 3px 100%, 3px 100%, 3px 100%, 3px 100%, 0% 100%);
-  }
-}
-
-
-.element {
-  padding: 1.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(var(--gradient-angle), rgb(205, 3, 255), transparent, transparent);
-  border-radius: 20px;
-  animation: rotation 5s linear 0s infinite normal forwards;
-  position: relative;
-  outline-offset: 2px; /* This will only work if you keep the solid outline */
-}
-
-.element::before {
-  content: '';
-  position: absolute;
-  top: -4px; /* Adjust based on desired thickness */
-  right: -4px;
-  bottom: -4px;
-  left: -4px;
-  border-radius: 20px;
-
-  z-index: -1; /* Ensures the gradient is behind the content */
-  mask: border-box;
-  mask-composite: exclude;
-}
-
-
-
-@keyframes rotation {
-  0% {
-    --gradient-angle: 0deg;
-  }
-
-  100% {
-    --gradient-angle: 360deg;
-  }
-}
 
 @property --gradient-angle {
   syntax: "<angle>";

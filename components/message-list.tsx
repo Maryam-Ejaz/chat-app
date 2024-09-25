@@ -61,38 +61,8 @@ interface UserData {
 
   // Function to remove a typing message
   const removeTypingMessage = async (id: any) => {
-    var id_ = id.toString();
-    await optimisticDeleteMessage_(`${generateUUIDWithPrefix(id_)}`);
+    await optimisticDeleteMessage_(`${generateUUIDWithPrefix(id)}`);
   };
-
-//   // Function to fetch user data, including the color, based on userId
-// const getUserColor = async (userId: string): Promise<string | null> => {
-//   const supabase = supabaseClient();
-
-//   try {
-//     // Explicitly specify the type of data you expect to get
-//     const { data, error } = await supabase
-//       .from("users")
-//       .select("*")
-//       .eq("id", userId)
-//       .single();
-
-//     if (error) {
-//       console.error("Error fetching user data:", error.message);
-//       return null; // Handle error appropriately
-//     }
-
-//     // Log the full data object for debugging
-//     console.log("Fetched user data:", data);
-
-//     // Return the color from user data; ensure the field name matches your database schema
-//     return data || "#000000"; 
-//   } catch (error) {
-//     console.error("Error retrieving user color:", error);
-//     return null;
-//   }
-// };
-
 
   useEffect(() => {
     
@@ -106,7 +76,7 @@ interface UserData {
           if (response.payload.isTyping) {
             addTypingMessage({
               id: generateUUIDWithPrefix(response.payload.userId),
-              text: `${response.payload.displayName} is typing...`,
+              text: `💬 Typing...`,
               send_by: response.payload.userId,
               is_edit: false,
               created_at: new Date().toISOString(),

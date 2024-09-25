@@ -27,54 +27,54 @@ const Message = ({ message }: { message: Imessage }) => {
 
   function isUUIDWithTestPrefix(uuid: string): boolean {
     const prefix = "test";
-  
+
     // Check if the UUID starts with the "test" prefix
     return uuid.startsWith(prefix);
-  }  
+  }
 
   useEffect(() => {
     // Set the gradient color when the component mounts
-    setBodyColor({ color: message.users?.colour || ""});
-}, [message.users?.colour]);
+    setBodyColor({ color: message.users?.colour || "" });
+  }, [message.users?.colour]);
 
 
   return (
     <div className={`flex ${isCurrentUser ? 'flex-row-reverse mr-[-12px]' : 'mr-4'} gap-2`}>
       <div className={`flex ${isCurrentUser ? 'flex-row-reverse ml-4' : 'mr-4'}`}>
         {isCurrentUser && <MessageMenu message={message} />}
-      {isUUIDWithTestPrefix(message.id)&&
-      
-  <div className="relative flex h-full w-full ml-[-4px]">
-    <Image
-        src={avatarUrl}
-        alt={displayName}
-        width={45}
-        height={45}
-        className="rounded-lg shadow-xl pic"
-        style={{ objectFit: 'cover', height: '45px' }}
-        unoptimized
-      />
-  <div className="conic">
-    
-    <div className="relative w-[56px] h-[53px]  p-[1px] z-10 ">
-      
-    </div>
-  </div>
-  </div>}
-  
-  {!isUUIDWithTestPrefix(message.id)&&
-    <div>
-    <Image
-      src={avatarUrl}
-      alt={displayName}
-      width={45}
-      height={45}
-      className={`rounded-lg shadow-xl`}
-      style={{ objectFit: 'cover', height: '45px' }}
-      unoptimized
-    />
-  </div>
-  }
+        {isUUIDWithTestPrefix(message.id) &&
+
+          <div className="relative flex h-full w-full ml-[-4px]">
+            <Image
+              src={avatarUrl}
+              alt={displayName}
+              width={45}
+              height={45}
+              className="rounded-lg shadow-xl pic"
+              style={{ objectFit: 'cover', height: '45px' }}
+              unoptimized
+            />
+            <div className="conic">
+
+              <div className="relative w-[56px] h-[53px]  p-[1px] z-10 ">
+
+              </div>
+            </div>
+          </div>}
+
+        {!isUUIDWithTestPrefix(message.id) &&
+          <div>
+            <Image
+              src={avatarUrl}
+              alt={displayName}
+              width={45}
+              height={45}
+              className={`rounded-lg shadow-xl`}
+              style={{ objectFit: 'cover', height: '45px' }}
+              unoptimized
+            />
+          </div>
+        }
 
 
       </div>

@@ -13,7 +13,7 @@ export type Imessage = {
     created_at: string;
     display_name: string;
     id: string;
-    colour: string;
+    colour: string
   } | null;
 };
 
