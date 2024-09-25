@@ -246,7 +246,9 @@ interface UserData {
         <DeleteAlert />
         <EditAlert />
       </div>
-      {userScrolled && (
+
+      {/* Auto Scroll down feature */}
+      {/* {userScrolled && (
         <div className="absolute bottom-32 w-full">
           {notification ? (
             <div
@@ -266,7 +268,7 @@ interface UserData {
             </div>
           )}
         </div>
-      )}
+      )} */}
     </>
   );
 };

@@ -12,6 +12,7 @@ import SendIcon from "@/components/svgs/send-icon";
 import { useTheme } from "next-themes";
 import { useTypingIndicator } from "./typing-indicator";
 import { getAssignedColor } from "@/lib/getColor";
+import { useMediaQuery } from 'react-responsive';
 
 const ChatInput = () => {
   const user = useUser((state) => state.user);
@@ -26,7 +27,7 @@ const ChatInput = () => {
   const [emojiStyle, setEmojiStyle] = useState<EmojiStyle>(EmojiStyle.NATIVE);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
-
+  const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
 
   useTypingIndicator(isTyping);
 
@@ -118,6 +119,30 @@ const ChatInput = () => {
   return (
     <div className="px-9 pb-5 z-index-50">
       <div className="w-full">
+      {showEmojiPicker && (
+              <div
+                ref={emojiPickerRef}
+                className={`absolute z-10 backdrop-blur-lg scroll-auto ${isMobile ? 'w-[100vw] left-[-3px] bottom-20 ' : 'right-5 bottom-12 '}`}
+              >
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  emojiStyle={emojiStyle}
+                  autoFocusSearch={false}
+                  theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
+                  style={{
+                    backgroundColor: "var(--background-color)",
+                    backdropFilter: "blur(50.6px)",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    width: isMobile ? '100vw' : '40vw', 
+                    height: isMobile ? '50vh' : '40vh',
+                  }}
+              
+
+                />
+               
+              </div>
+            )}
         <div className="relative flex items-center">
           <div className="flex-1 relative px-1">
             <Textarea
@@ -145,29 +170,11 @@ const ChatInput = () => {
             <button
               className="absolute right-2 bottom-1 text-[var(--foreground-color)] opacity-50 hover:opacity-100 transition-opacity duration-300"
               onClick={() => {
-                setShowEmojiPicker((prev) => !prev);
-                textareaRef.current?.focus();
+                setShowEmojiPicker(!showEmojiPicker);
               }}
             >
               <SmileIcon className="h-5 w-5 mb-1" />
             </button>
-
-            {showEmojiPicker && (
-              <div ref={emojiPickerRef} className="absolute bottom-12 right-[-33px] z-10 backdrop-blur-lg">
-                <EmojiPicker
-                  onEmojiClick={handleEmojiClick}
-                  emojiStyle={emojiStyle}
-                  autoFocusSearch={false}
-                  theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
-                  style={{
-                    backgroundColor: "var(--background-color)",
-                    backdropFilter: "blur(50.6px)",
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  }}
-                />
-              </div>
-            )}
           </div>
           <div className="ml-4 mt-2 flex items-center">
             <button

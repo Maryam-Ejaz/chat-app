@@ -15,6 +15,8 @@ import { Edit2, MoreVertical } from "lucide-react";
 import { useUser } from "@/lib/store/user";
 import { DEFAULT_AVATAR } from "@/constants";
 import setBodyColor from "@/lib/setColor";
+import typingIcon from "./svgs/typing-icon";
+import TypingIcon from "./svgs/typing-icon";
 
 const Message = ({ message }: { message: Imessage }) => {
   const user = useUser((state) => state.user);
@@ -92,7 +94,14 @@ const Message = ({ message }: { message: Imessage }) => {
               )}
             </div>
             <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`}>
-              {message.text}
+              {isUUIDWithTestPrefix(message.id) ? (
+                <span className="flex items-center gap-2"> {/* Flex container to align icon and text */}
+                  <TypingIcon className="w-4 h-4" /> {/* Adjust the size of the TypingIcon if needed */}
+                  Typing...
+                </span>
+              ) : (
+                message.text
+              )}
             </p>
           </div>
 
