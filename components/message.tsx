@@ -104,8 +104,7 @@ const Message = ({ message }: { message: Imessage }) => {
               {isUUIDWithTestPrefix(message.id) ? (
                 <span className="flex items-center gap-2">
                 <TypingIcon className="w-4 h-4" />
-                <span className="typing-dots">Typing<span className="dots"></span></span>
-              </span>
+                <span className="typing-dots">Typing<span className="dots"></span></span></span>
               ) : (
                 message.text
               )}

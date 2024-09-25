@@ -242,9 +242,8 @@
 .dots::after {
   content: '';
   display: inline-block;
-  width: 1em; /* Adjust the width to better space the dots */
   text-align: left;
-  animation: dots 1.5s steps(4, end) infinite; /* Steps tweaked for better timing */
+  animation: dots 1.5s steps(4, end) infinite; 
 }
 
 @keyframes dots {
