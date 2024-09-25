@@ -43,10 +43,10 @@ const Message = ({ message }: { message: Imessage }) => {
     <div className={`flex ${isCurrentUser ? 'flex-row-reverse mr-[-12px]' : 'mr-4'} gap-2`}>
       <div className={`flex items-start ${isCurrentUser ? 'flex-row-reverse ml-4' : 'mr-4'}`}>
         <div className={`flex  mt-2`}>
-        {isCurrentUser && <MessageMenu message={message} />}
+          {isCurrentUser && <MessageMenu message={message} />}
 
         </div>
-        
+
         {isUUIDWithTestPrefix(message.id) &&
 
           <div className="relative flex h-full w-full ml-[-4px]">
@@ -88,7 +88,7 @@ const Message = ({ message }: { message: Imessage }) => {
         <div className="flex items-start justify-between gap-1">
           <div className={`flex flex-col gap-0 w-[100%] ${isCurrentUser ? 'items-end' : ''}`} style={{ letterSpacing: '0.1em' }}>
             <div className={`flex items-center text-[var(--message-detail-color)] gap-2 ${isCurrentUser ? 'justify-end flex-row-reverse' : ''}`}>
-              <h1 className="font-light" style={{ fontSize: '10px' }}>{displayName}</h1>
+              <h1 className="font-light" style={{ fontSize: '10px' }}>{displayName.length > 20 ? `${displayName.substring(0, 20)}...` : displayName}</h1>
               <h1 className={`flex font-light ${isCurrentUser ? 'flex-row-reverse' : ''}`} style={{ fontSize: '10px' }}>
                 {formattedTime} <span className="mx-1"> </span> {formattedDate}
               </h1>
@@ -96,15 +96,15 @@ const Message = ({ message }: { message: Imessage }) => {
                 <h1 className="font-light" style={{ fontSize: '10px' }}><Edit2 size={10} /></h1>
               )}
             </div>
-            <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`} 
-            style={{
-              wordBreak: 'break-word', 
-              overflowWrap: 'break-word', 
-            }}>
+            <p className={`break-words font-medium rounded-bl-3xl w-fit ${isCurrentUser ? 'text-right' : ''}`}
+              style={{
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+              }}>
               {isUUIDWithTestPrefix(message.id) ? (
                 <span className="flex items-center gap-2">
-                <TypingIcon className="w-4 h-4" />
-                <span className="typing-dots">Typing<span className="dots"></span></span></span>
+                  <TypingIcon className="w-4 h-4" />
+                  <span className="typing-dots">Typing<span className="dots"></span></span></span>
               ) : (
                 message.text
               )}
