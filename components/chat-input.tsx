@@ -111,7 +111,7 @@ const ChatInput = () => {
 
 
   const handleEmojiClick = (emojiObject: any) => {
-    setText((prev) => prev + emojiObject);
+    setText((prev) => prev + emojiObject.emoji);
     textareaRef.current?.focus();
   };
 
